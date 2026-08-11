@@ -22,7 +22,7 @@ if (envConfig.NODE_ENV !== 'production') {
 export const connectDB = async (): Promise<void> => {
   try {
     await prisma.$connect();
-    console.log('Database connected', envConfig.DATABASE.URL);
+    console.log('Database connected');
   } catch (error) {
     console.error('Database connection failed', error);
     process.exit(1);
