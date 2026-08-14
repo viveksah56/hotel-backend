@@ -7,10 +7,10 @@ export const DEFAULT_SORT_ORDER: SortOrder = 'desc';
 export type SortOrder = 'asc' | 'desc';
 
 export interface PaginationParams {
-    page?: number | string;
-    limit?: number | string;
-    sortBy?: string;
-    sortOrder?: SortOrder | string;
+    page?: number | string | undefined;
+    limit?: number | string | undefined;
+    sortBy?: string | undefined;
+    sortOrder?: SortOrder | string | undefined;
 }
 
 export interface NormalizedPaginationParams {

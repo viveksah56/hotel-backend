@@ -2,24 +2,25 @@ import { prisma } from '../config/db.connect.js';
 import { ApiError } from '../utils/api.error.js';
 import { paginateQuery } from '../helper/pagination.js';
 import type { PaginationParams, PaginatedResult } from '../helper/pagination.js';
-import type { User } from '../../generated/prisma/client.js';
+import type { User, Role } from '../../generated/prisma/client.js';
 import { uploadImage, deleteImage, extractPublicId } from '../services/cloudinary.service.js';
+import { stripUndefined } from '../utils/strip-undefined.js';
 
 
 type PublicUser = Omit<User, 'password' | 'refreshTokens'>;
 
 interface UpdateUserData {
-  name?: string;
-  phone?: string;
+  name?: string | undefined;
+  phone?: string | undefined;
 }
 
 interface AdminUpdateUserData {
-  name?: string;
-  phone?: string;
-  email?: string;
-  role?: string;
-  isVerified?: boolean;
-  isDeleted?: boolean;
+  name?: string | undefined;
+  phone?: string | undefined;
+  email?: string | undefined;
+  role?: Role | undefined;
+  isVerified?: boolean | undefined;
+  isDeleted?: boolean | undefined;
 }
 
 const USER_SORT_FIELDS = ['createdAt', 'name', 'email'] as const;
@@ -80,10 +81,10 @@ class UserService {
 
     const updated = await prisma.user.update({
       where: { id },
-      data: {
+      data: stripUndefined({
         ...data,
         ...(avatarUrl && { avatar: avatarUrl }),
-      },
+      }),
     });
 
     return toPublicUser(updated);
@@ -105,7 +106,7 @@ class UserService {
 
     const updated = await prisma.user.update({
       where: { id },
-      data,
+      data: stripUndefined(data),
     });
 
     return toPublicUser(updated);

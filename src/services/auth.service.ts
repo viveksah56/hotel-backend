@@ -4,6 +4,7 @@ import { AuthProvider } from '../../generated/prisma/client.js';
 import { OAuth2Client } from 'google-auth-library';
 import { prisma } from '../config/db.connect.js';
 import { ApiError } from '../utils/api.error.js';
+import { stripUndefined } from '../utils/strip-undefined.js';
 import { envConfig } from '../config/env.config.js';
 import {
     REMEMBER_ME_REFRESH_EXPIRATION,
@@ -23,8 +24,8 @@ interface AuthTokens {
 }
 
 interface SessionMeta {
-    device?: string;
-    ipAddress?: string;
+    device?: string | undefined;
+    ipAddress?: string | undefined;
 }
 
 interface PublicUser {
@@ -157,9 +158,8 @@ class AuthService {
             data: {
                 token: hashToken(refreshToken),
                 userId,
-                device: meta.device,
-                ipAddress: meta.ipAddress,
                 expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_MS),
+                ...stripUndefined({ device: meta.device, ipAddress: meta.ipAddress }),
             },
         });
 

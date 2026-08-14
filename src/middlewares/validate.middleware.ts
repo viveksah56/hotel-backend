@@ -1,5 +1,6 @@
 import type { ZodType } from 'zod';
 import type { Request, Response, NextFunction } from 'express';
+import type { ParsedQs } from 'qs';
 import { BadRequestError } from '../utils/api.error.js';
 
 function formatIssues(issues: { path: PropertyKey[]; message: string }[]): string {
@@ -29,7 +30,7 @@ export const validateQuery = <T>(schema: ZodType<T>) => {
             return;
         }
 
-        req.validatedQuery = result.data as Request['validatedQuery'];
+        req.validatedQuery = result.data as ParsedQs;
         next();
     };
 };
