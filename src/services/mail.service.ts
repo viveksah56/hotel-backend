@@ -15,8 +15,17 @@ class EmailService {
         user: envConfig.SMTP.USERNAME,
         pass: envConfig.SMTP.PASSWORD,
       },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
+    });
+    console.log('SMTP config:', {
+      host: envConfig.SMTP.HOST,
+      port: envConfig.SMTP.PORT,
+      secure: envConfig.SMTP.SECURE,
     });
   }
+
 
   async sendEmail(to: string, subject: string, html: string): Promise<void> {
     try {

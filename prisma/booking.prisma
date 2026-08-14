@@ -1,0 +1,61 @@
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+  FAILED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  ESEWA
+  KHALTI
+  STRIPE
+}
+
+model Booking {
+  bookingId String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  hotelId String
+  hotel   Hotel  @relation(fields: [hotelId], references: [hotelId], onDelete: Cascade)
+
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [roomId], onDelete: Cascade)
+
+  checkInDate  DateTime
+  checkOutDate DateTime
+  guestCount   Int      @default(1)
+
+  totalAmount Decimal       @db.Decimal(10, 2)
+  status      BookingStatus @default(PENDING)
+
+  paymentStatus PaymentStatus  @default(UNPAID)
+  paymentMethod PaymentMethod?
+  transactionId String?
+
+  specialRequest String?
+
+  cancelledAt  DateTime?
+  cancelReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([hotelId])
+  @@index([roomId])
+  @@index([status])
+  @@index([checkInDate, checkOutDate])
+  @@map("bookings")
+}

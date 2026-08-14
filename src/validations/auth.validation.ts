@@ -23,7 +23,7 @@ export const loginSchema = z.object({
     rememberMe: z.boolean().optional().default(false),
 });
 
-export const verifyEmailSchema = z.object({
+export const verifyEmailQuerySchema = z.object({
     token: z.string().min(1, 'Token is required'),
 });
 
@@ -37,6 +37,6 @@ export const googleLoginSchema = z.object({
 
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
-export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
+export type VerifyEmailQueryInput = z.infer<typeof verifyEmailQuerySchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
 export type GoogleLoginInput = z.infer<typeof googleLoginSchema>;

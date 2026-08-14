@@ -42,3 +42,18 @@ export const authorize = (...roles: string[]) => {
         next();
     };
 };
+
+export const authorizeSelfOrRole = (paramKey: string, ...roles: string[]) => {
+    return (req: Request, _res: Response, next: NextFunction): void => {
+        if (!req.user) {
+            next(new ApiError('Unauthorized', 401));
+            return;
+        }
+        const targetId = req.params[paramKey];
+        if (req.user.id === targetId || roles.includes(req.user.role)) {
+            next();
+            return;
+        }
+        next(new ApiError('You do not have permission to perform this action', 403));
+    };
+};

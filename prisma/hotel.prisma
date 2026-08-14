@@ -1,7 +1,98 @@
-model Hotel {
-    hotelId     String  @id @default(uuid())
-    name        String
-    description String?
+enum HotelType {
+  BOUTIQUE
+  RESORT
+  HOSTEL
+  MOTEL
+  LUXURY
+}
 
-    @@map("hotels")
+enum HotelStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum RoomType {
+  SINGLE
+  DOUBLE
+  SUITE
+  FAMILY
+}
+
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+  MAINTENANCE
+}
+
+model Hotel {
+  hotelId     String      @id @default(uuid())
+  name        String
+  description String?
+  type        HotelType   @default(BOUTIQUE)
+  status      HotelStatus @default(ACTIVE)
+
+  address   String
+  city      String
+  district  String?
+  country   String  @default("Nepal")
+  latitude  Float?
+  longitude Float?
+
+  phone String?
+  email String?
+
+  starRating Float?   @default(0)
+  images     String[]
+  amenities  String[]
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  rooms    Room[]
+  bookings Booking[]
+  reviews  Review[]
+
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([city])
+  @@index([type])
+  @@index([status])
+  @@index([ownerId])
+  @@map("hotels")
+}
+
+model Room {
+  roomId  String @id @default(uuid())
+  hotelId String
+  hotel   Hotel  @relation(fields: [hotelId], references: [hotelId], onDelete: Cascade)
+
+  roomNumber String
+  type       RoomType   @default(SINGLE)
+  status     RoomStatus @default(AVAILABLE)
+
+  pricePerNight Decimal @db.Decimal(10, 2)
+  capacity      Int     @default(1)
+  bedCount      Int     @default(1)
+
+  images    String[]
+  amenities String[]
+
+  bookings Booking[]
+
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([hotelId, roomNumber])
+  @@index([hotelId])
+  @@index([type])
+  @@index([status])
+  @@map("rooms")
 }

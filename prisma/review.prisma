@@ -1,0 +1,23 @@
+model Review {
+  reviewId String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  hotelId String
+  hotel   Hotel  @relation(fields: [hotelId], references: [hotelId], onDelete: Cascade)
+
+  rating  Int
+  comment String?
+
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, hotelId])
+  @@index([hotelId])
+  @@index([userId])
+  @@map("reviews")
+}
