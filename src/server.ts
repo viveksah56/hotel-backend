@@ -22,6 +22,9 @@ app.use(cookieParser());
 app.use(morgan(envConfig.NODE_ENV === 'development' ? 'dev' : 'combined'));
 
 app.use('/api', routeConfig);
+app.use('/', (_req, res) => {
+    res.send('Welcome to the API');
+});
 app.use(notFoundHandler);
 app.use(errorHandler);
 
