@@ -48,3 +48,18 @@ export const validateParams = <T>(schema: ZodType<T>) => {
         next();
     };
 };
+
+export const validateBodyByRole = <T, U>(adminSchema: ZodType<T>, defaultSchema: ZodType<U>) => {
+    return (req: Request, _res: Response, next: NextFunction): void => {
+        const schema = req.user?.role === 'ADMIN' ? adminSchema : defaultSchema;
+        const result = schema.safeParse(req.body);
+
+        if (!result.success) {
+            next(new BadRequestError(formatIssues(result.error.issues)));
+            return;
+        }
+
+        req.body = result.data;
+        next();
+    };
+};
